@@ -75,3 +75,16 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  information:
+    if: failure()
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Output failure information
+        run: |
+          echo "Linting, testing, or building failed. Please check the logs for details."
+          echo "Linting status: ${{ job.status }}"
+          echo "Testing status: ${{ needs.test.result }}"
+          echo "Building status: ${{ needs.build.result }}"
